@@ -8,8 +8,6 @@ run: build
 	until docker-compose logs kafka | grep 'Startup complete.' > /dev/null; do sleep 1; done
 	docker-compose logs kafka | sed -ne "s/^.*Kafka version : \([0-9\.]*\).*$$/Kafka Version: \1/p"
 	docker-compose up test
-
-stop:
 	docker-compose down
 
 restart-docker:
