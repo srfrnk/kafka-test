@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "kafka-node": "v2.2.2",
+    "kafka-node": "3.0.0",
     "uuid": "^3.3.2"
   }
 }
