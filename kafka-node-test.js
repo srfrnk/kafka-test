@@ -12,7 +12,8 @@ async function kafkaTest() {
     console.log("Connected");
     await new Promise((resolve, reject) => {
         console.log("Creating topic...");
-        producer.createTopics([topicId], (error, data) => {
+
+        client.createTopics([topicId], (error, result) => {
             if (error) {
                 console.log(`Topic creation: ${error}`);
                 reject(error);
@@ -21,6 +22,16 @@ async function kafkaTest() {
                 resolve(producer);
             }
         });
+
+        // producer.createTopics([topicId], (error, data) => {
+        //     if (error) {
+        //         console.log(`Topic creation: ${error}`);
+        //         reject(error);
+        //     } else {
+        //         console.log("Topic created");
+        //         resolve(producer);
+        //     }
+        // });
     });
 
     const payloads1 = [
@@ -88,4 +99,4 @@ async function kafkaTest() {
     });
 }
 
-kafkaTest().then(() => { process.exit(); }, () => { process.exit(); });
+kafkaTest().then(() => { process.exit(); }, (err) => { console.log(err);process.exit(); });
