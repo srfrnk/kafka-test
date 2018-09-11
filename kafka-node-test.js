@@ -5,15 +5,19 @@ async function kafkaTest() {
     console.log("Starting");
     const topicId = v4().toString();
     const client = new KafkaClient({ kafkaHost: 'kafka:9092', connectTimeout: 6000, requestTimeout: 6000 });
-    const producer = new Producer(client);
+    client.connect();
     await new Promise((resolve) => {
-        producer.on('ready', () => resolve(producer));
+        client.on('ready', () => resolve());
     });
-    console.log("Connected");
+    console.log("Connected client");
     await new Promise((resolve, reject) => {
         console.log("Creating topic...");
 
-        client.createTopics([topicId], (error, result) => {
+        client.createTopics([{
+            topic: topicId,
+            partitions: 1,
+            replicationFactor: 1
+          }], (error, result) => {
             if (error) {
                 console.log(`Topic creation: ${error}`);
                 reject(error);
@@ -33,6 +37,11 @@ async function kafkaTest() {
         //     }
         // });
     });
+    const producer = new Producer(client);
+    await new Promise((resolve) => {
+        producer.on('ready', () => resolve(producer));
+    });
+    console.log("Connected producer");
 
     const payloads1 = [
         { topic: topicId, messages: 'message' },
