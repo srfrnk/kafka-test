@@ -8,6 +8,7 @@ async function kafkaTest() {
     client.connect();
     await new Promise((resolve) => {
         client.on('ready', () => resolve());
+        client.on('error', (err) => reject(`Client connection error: ${err}`));
     });
     console.log("Connected client");
     await new Promise((resolve, reject) => {
@@ -23,7 +24,7 @@ async function kafkaTest() {
                 reject(error);
             } else {
                 console.log("Topic created");
-                resolve(producer);
+                resolve();
             }
         });
 
@@ -38,10 +39,11 @@ async function kafkaTest() {
         // });
     });
     const producer = new Producer(client);
-    await new Promise((resolve) => {
-        producer.on('ready', () => resolve(producer));
-    });
-    console.log("Connected producer");
+    // await new Promise((resolve) => {
+    //     producer.on('ready', () => resolve(producer));
+    //     producer.on('error', (err) => reject(`Producer connection error: ${err}`));
+    // });
+    // console.log("Connected producer");
 
     const payloads1 = [
         { topic: topicId, messages: 'message' },
